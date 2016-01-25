@@ -42,6 +42,18 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
 	F3A04C595DB5B6A5F1ECA43E3B7BBB100D811BBE \
 	F7DA48BB64BCB84ECBA7EE6935CD23C10D498E23
 
+# Use the default unprivileged account. This could be considered bad practice
+# on systems where multiple processes end up being executed by 'daemon' but
+# here we only ever run one process anyway.
+ENV RUN_USER            tomcat
+ENV RUN_USER_UID        5888
+ENV RUN_GROUP           tomcat
+ENV RUN_GROUP_GID       5888
+
+RUN \
+    groupadd --gid ${RUN_GROUP_GID} -r ${RUN_GROUP} && \
+    useradd -r --uid ${RUN_USER_UID} -g ${RUN_GROUP} ${RUN_USER}
+
 ENV TOMCAT_MAJOR 8
 ENV TOMCAT_VERSION 8.0.30
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
@@ -62,6 +74,17 @@ RUN set -x \
 	&& rm bin/*.bat \
 	&& rm tomcat.tar.gz*
 
+RUN chown -R root:root                   ${CATALINA_HOME}/                   \
+    && chmod -R 755                      ${CATALINA_HOME}/                   \
+    && chmod -R 700                      ${CATALINA_HOME}/conf/Catalina      \
+    && chmod -R 700                      ${CATALINA_HOME}/logs               \
+    && chmod -R 700                      ${CATALINA_HOME}/temp               \
+    && chmod -R 700                      ${CATALINA_HOME}/work               \
+    && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/logs               \
+    && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/temp               \
+    && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/work               \
+    && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/conf
+    
 COPY docker-entrypoint.sh /
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
