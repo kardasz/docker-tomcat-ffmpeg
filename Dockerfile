@@ -50,6 +50,9 @@ ENV RUN_USER_UID        5888
 ENV RUN_GROUP           tomcat
 ENV RUN_GROUP_GID       5888
 
+RUN userdel -f ${RUN_USER} &>/dev/null || echo "User tomcat not exists"
+RUN groupdel ${RUN_GROUP} &>/dev/null || echo "Group tomcat not exists"
+
 RUN \
     groupadd --gid ${RUN_GROUP_GID} -r ${RUN_GROUP} && \
     useradd -r --uid ${RUN_USER_UID} -g ${RUN_GROUP} ${RUN_USER}
