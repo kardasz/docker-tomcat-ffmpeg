@@ -9,14 +9,6 @@ RUN \
     apt-get -y dist-upgrade && \
     apt-get -y install wget curl libav-tools libavcodec-extra
 
-# grab gosu for easy step-down from root
-RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
-RUN curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture)" \
-	&& curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture).asc" \
-	&& gpg --verify /usr/local/bin/gosu.asc \
-	&& rm /usr/local/bin/gosu.asc \
-	&& chmod +x /usr/local/bin/gosu
-
 # Download Oracle JDK
 ENV ORACLE_JDK_VERSION jdk-8u72
 ENV ORACLE_JDK_URL     http://download.oracle.com/otn-pub/java/jdk/8u72-b15/jdk-8u72-linux-x64.tar.gz
@@ -50,12 +42,10 @@ ENV RUN_USER_UID        5888
 ENV RUN_GROUP           tomcat
 ENV RUN_GROUP_GID       5888
 
-RUN userdel -f ${RUN_USER} &>/dev/null || echo "User tomcat not exists"
-RUN groupdel ${RUN_GROUP} &>/dev/null || echo "Group tomcat not exists"
-
 RUN \
     groupadd --gid ${RUN_GROUP_GID} -r ${RUN_GROUP} && \
     useradd -r --uid ${RUN_USER_UID} -g ${RUN_GROUP} ${RUN_USER}
+
 
 ENV TOMCAT_MAJOR 8
 ENV TOMCAT_VERSION 8.0.30
@@ -65,7 +55,6 @@ ENV CATALINA_HOME /usr/local/tomcat
 ENV PATH $CATALINA_HOME/bin:$PATH
 
 RUN mkdir -p "$CATALINA_HOME"
-RUN groupadd -r tomcat && useradd -r -g tomcat tomcat
 
 WORKDIR $CATALINA_HOME
 
@@ -88,9 +77,7 @@ RUN chown -R root:root                   ${CATALINA_HOME}/                   \
     && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/work               \
     && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/conf
     
-COPY docker-entrypoint.sh /
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
+USER ${RUN_USER}:${RUN_GROUP}
 
 EXPOSE 8080
 
