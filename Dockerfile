@@ -68,7 +68,6 @@ RUN set -x \
 
 RUN chown -R root:root                   ${CATALINA_HOME}/                   \
     && chmod -R 755                      ${CATALINA_HOME}/                   \
-    && chmod -R 700                      ${CATALINA_HOME}/conf/Catalina      \
     && chmod -R 700                      ${CATALINA_HOME}/logs               \
     && chmod -R 700                      ${CATALINA_HOME}/temp               \
     && chmod -R 700                      ${CATALINA_HOME}/work               \
