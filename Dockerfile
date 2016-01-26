@@ -66,6 +66,8 @@ RUN set -x \
 	&& rm bin/*.bat \
 	&& rm tomcat.tar.gz*
 
+RUN mkdir -p ${CATALINA_HOME}/webapp
+
 RUN chown -R root:root                   ${CATALINA_HOME}/                   \
     && chmod -R 755                      ${CATALINA_HOME}/                   \
     && chmod -R 700                      ${CATALINA_HOME}/logs               \
@@ -74,6 +76,8 @@ RUN chown -R root:root                   ${CATALINA_HOME}/                   \
     && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/logs               \
     && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/temp               \
     && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/work               \
+    && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/webapp             \
+    && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/webapps            \
     && chown -R ${RUN_USER}:${RUN_GROUP} ${CATALINA_HOME}/conf
     
 USER ${RUN_USER}:${RUN_GROUP}
