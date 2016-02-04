@@ -30,6 +30,9 @@ RUN mkdir -p /opt/jdk/$ORACLE_JDK_VERSION && \
     update-alternatives --install /usr/bin/java java /opt/jdk/$ORACLE_JDK_VERSION/bin/java 100 && \
     update-alternatives --install /usr/bin/javac javac /opt/jdk/$ORACLE_JDK_VERSION/bin/javac 100
 
+ENV JAVA_HOME /opt/jdk/$ORACLE_JDK_VERSION
+ENV JAVA_VERSION 8u72
+
 # see https://www.apache.org/dist/tomcat/tomcat-8/KEYS
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
 	05AB33110949707C93A279E3D3EFE6B686867BA6 \
