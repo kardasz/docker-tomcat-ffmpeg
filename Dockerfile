@@ -65,6 +65,8 @@ ENV TOMCAT_VERSION 8.0.30
 ENV TOMCAT_TGZ_URL https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
 
 ENV CATALINA_HOME /usr/local/tomcat
+ENV CATALINA_BASE $CATALINA_HOME
+ENV CATALINA_OPTS "-Djavax.net.ssl.trustStore=${JAVA_TRUSTSTORE} -Djavax.net.ssl.trustStorePassword=${JAVA_TRUSTSTORE_PASSWORD}"
 ENV PATH $CATALINA_HOME/bin:$JAVA_HOME/bin:$PATH
 
 RUN mkdir -p "$CATALINA_HOME"
