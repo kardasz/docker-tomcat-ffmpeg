@@ -30,8 +30,12 @@ RUN mkdir -p /opt/jdk/$ORACLE_JDK_VERSION && \
     update-alternatives --install /usr/bin/java java /opt/jdk/$ORACLE_JDK_VERSION/bin/java 100 && \
     update-alternatives --install /usr/bin/javac javac /opt/jdk/$ORACLE_JDK_VERSION/bin/javac 100
 
+
 ENV JAVA_HOME /opt/jdk/$ORACLE_JDK_VERSION
 ENV JAVA_VERSION 8u72
+ENV JAVA_TRUSTSTORE ${JAVA_HOME}/jre/lib/security/cacerts
+ENV JAVA_TRUSTSTORE_PASSWORD changeit
+ENV JAVA_OPTS "-Djavax.net.ssl.trustStore=${JAVA_TRUSTSTORE} -Djavax.net.ssl.trustStorePassword=${JAVA_TRUSTSTORE_PASSWORD}"
 
 # see https://www.apache.org/dist/tomcat/tomcat-8/KEYS
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
