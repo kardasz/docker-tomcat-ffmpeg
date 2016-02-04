@@ -26,10 +26,10 @@ ENV ORACLE_JDK_URL     http://download.oracle.com/otn-pub/java/jdk/8u72-b15/jdk-
 RUN mkdir -p /opt/jdk/$ORACLE_JDK_VERSION && \
     wget --header "Cookie: oraclelicense=accept-securebackup-cookie" -O /opt/jdk/$ORACLE_JDK_VERSION/$ORACLE_JDK_VERSION.tar.gz $ORACLE_JDK_URL && \
     tar -zxf /opt/jdk/$ORACLE_JDK_VERSION/$ORACLE_JDK_VERSION.tar.gz --strip-components=1 -C /opt/jdk/$ORACLE_JDK_VERSION && \
+    chown -R root:root /opt/jdk/$ORACLE_JDK_VERSION && \
     rm /opt/jdk/$ORACLE_JDK_VERSION/$ORACLE_JDK_VERSION.tar.gz && \
     update-alternatives --install /usr/bin/java java /opt/jdk/$ORACLE_JDK_VERSION/bin/java 100 && \
     update-alternatives --install /usr/bin/javac javac /opt/jdk/$ORACLE_JDK_VERSION/bin/javac 100
-
 
 ENV JAVA_HOME /opt/jdk/$ORACLE_JDK_VERSION
 ENV JAVA_VERSION 8u72
